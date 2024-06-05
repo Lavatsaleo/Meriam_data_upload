@@ -1,30 +1,51 @@
-// src/components/Auth/Register.js
 import React, { useState } from 'react';
-import API from '../../services/api';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await API.post('/auth/register', { username, email, password, role });
+            await axios.post('http://localhost:5000/auth/register', { username, email, password, role });
             alert('Registration successful');
+            navigate('/login');
         } catch (error) {
-            alert('Error registering');
+            alert('Error registering: ' + error.response.data.error);
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" required />
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+            <h2>Register</h2>
+            <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+            />
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+            />
+            <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+            />
             <select value={role} onChange={(e) => setRole(e.target.value)} required>
-                <option value="" disabled>Select Role</option>
+                <option value="">Select role</option>
                 <option value="uploader">Uploader</option>
                 <option value="downloader">Downloader</option>
                 <option value="admin">Admin</option>
