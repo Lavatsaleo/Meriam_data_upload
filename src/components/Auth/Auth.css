@@ -1,0 +1,21 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.card {
+    border: none;
+}
+
+.btn-primary {
+    background-color: #0066cc;
+    border-color: #0066cc;
+}
+
+.btn-primary:hover {
+    background-color: #005bb5;
+    border-color: #005bb5;
+}
+
+.text-center h2 {
+    color: #0066cc;
+}
