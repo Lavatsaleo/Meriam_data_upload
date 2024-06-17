@@ -1,60 +1,47 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Auth.css'; // Import the CSS file for custom styles
+import './Login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token);
-            alert('Login successful');
-            navigate('/dashboard');
-        } catch (error) {
-            alert('Error logging in: ' + error.response.data.error);
+            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, { email, password });
+            localStorage.setItem('token', res.data.token);
+            navigate('/dashboard'); // Redirect to a protected route
+        } catch (err) {
+            setError('Invalid credentials');
         }
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
-                <div className="text-center mb-4">
-                    <img src="/frontend/public/ACF_Logo.png" alt="Action Against Hunger Logo" style={{ width: '100px' }} />
-                    <h2 className="mt-3">Login</h2>
-                </div>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group mb-3">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            className="form-control"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group mb-3">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            className="form-control"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
+        <div className="login-container">
+            <h1>MERIAM DATA UPLOAD</h1>
+            <h2>Login</h2>
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type="submit">Login</button>
+            </form>
+            {error && <p>{error}</p>}
         </div>
     );
 };

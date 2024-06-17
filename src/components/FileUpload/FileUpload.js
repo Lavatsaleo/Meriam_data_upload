@@ -1,9 +1,13 @@
-// src/components/FileUpload/FileUpload.js
 import React, { useState } from 'react';
-import API from '../../services/api';
+import axios from 'axios';
 
 const FileUpload = () => {
     const [file, setFile] = useState(null);
+    const [message, setMessage] = useState('');
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -11,23 +15,26 @@ const FileUpload = () => {
         formData.append('file', file);
 
         try {
-            await API.post('/files/upload', formData, {
+            const res = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/files/upload`, formData, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem(process.env.REACT_APP_AUTH_TOKEN_NAME)}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            alert('File uploaded successfully');
-        } catch (error) {
-            alert('Error uploading file');
+            setMessage(res.data.message);
+        } catch (err) {
+            setMessage('Failed to upload file');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="file" onChange={(e) => setFile(e.target.files[0])} required />
-            <button type="submit">Upload</button>
-        </form>
+        <div>
+            <h2>File Upload</h2>
+            <form onSubmit={handleSubmit}>
+                <input type="file" onChange={handleFileChange} />
+                <button type="submit">Upload</button>
+            </form>
+            {message && <p>{message}</p>}
+        </div>
     );
 };
 

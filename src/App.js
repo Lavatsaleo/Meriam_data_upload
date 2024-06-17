@@ -8,6 +8,9 @@ import AdminPanel from "./components/AdminPanel/AdminPanel";
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 // import Home from './components/Home'; 
+import Logout from './components/Auth/Logout';
+
+
 
 const App = () => {
 	return (
@@ -19,6 +22,7 @@ const App = () => {
 				<Route path="/upload" element={<FileUpload />} />
 				<Route path="/download" element={<FileDownload />} />
 				<Route path="/admin" element={<AdminPanel />} />
+				<Route path="/logout" component={Logout} />
 				<Route path="/dashboard" element={<ProtectedRoute element={Dashboard} />} />
 			</Routes>
 		</Router>
